@@ -4,6 +4,7 @@ package sparkClient
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -15,6 +16,17 @@ import (
 	"github.com/joeshaw/envdecode"
 )
 
+type SparkRoom struct {
+	Id           string
+	Title        string
+	LastActivity time.Time
+	Create       time.Time
+}
+
+type SparkRooms struct {
+	Items []SparkRoom
+}
+
 type sparkClient struct {
 	authtoken  string
 	conn       net.Conn
@@ -25,7 +37,7 @@ type sparkClient struct {
 var sparkURL string = "https://api.ciscospark.com/v1"
 
 // This function is used by the client requests to perform the transaction
-func (s *sparkClient) processRequest(req *http.Request) {
+func (s *sparkClient) processRequest(req *http.Request) (response []byte) {
 	req.Header.Set("Authorization", "Bearer "+s.authtoken)
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := s.httpClient.Do(req)
@@ -42,49 +54,72 @@ func (s *sparkClient) processRequest(req *http.Request) {
 	if err != nil {
 		log.Fatalf("Error: %s", err)
 	}
-	log.Println("StatusCode: ", resp.StatusCode)
-	fmt.Printf("%s", body)
+	// log.Println("StatusCode: ", resp.StatusCode)
+	//fmt.Printf("%s", body)
+	return body
 }
 
-func (s *sparkClient) PostMessage(roomId string, fileURL string, text string) {
-	jsonString := fmt.Sprintf("{ \"roomId\" : \"%s\" , \"file\" : \"%s\", \"text\" : \"%s\" }", roomId, fileURL, text)
+func (s *sparkClient) PostMessageToSparkRoom(text string, roomId string, fileURL string) {
+	var jsonString string
+	if fileURL != "" {
+		jsonString = fmt.Sprintf("{ \"roomId\" : \"%s\" ,  \"file\" : \"%s\" , \"text\" : \"%s\" }", roomId, fileURL, text)
+	} else {
+		jsonString = fmt.Sprintf("{ \"roomId\" : \"%s\" ,  \"text\" : \"%s\" }", roomId, text)
+	}
+	fmt.Println(jsonString)
 	var jsonStr = []byte(jsonString)
 	req, err := http.NewRequest("POST", sparkURL+"/messages", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		log.Println("creating request failed:", err)
 	}
-	s.processRequest(req)
-
+	str := s.processRequest(req)
+	fmt.Printf("%s", str)
 }
 
 func (s *sparkClient) AddMemberToSparkRoom(email string, roomId string, isModerator bool) {
-	jsonString := fmt.Sprintf("{ \"roomId\" : \"%s\" , \"personEmail\" : \"%s\", \"isModerator\" : %e }", roomId, email, isModerator)
+	jsonString := fmt.Sprintf("{ \"roomId\" : \"%s\" , \"personEmail\" : \"%s\", \"isModerator\" : %t }", roomId, email, isModerator)
+	fmt.Println(jsonString)
 	var jsonStr = []byte(jsonString)
 	req, err := http.NewRequest("POST", sparkURL+"/memberships", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		log.Println("creating request failed:", err)
 	}
-	s.processRequest(req)
+	str := s.processRequest(req)
+	fmt.Printf("%s", str)
 }
 
 // This function will create a new Spark Room
-func (s *sparkClient) NewRoom(roomName string) {
+func (s *sparkClient) NewRoom(roomName string) SparkRoom {
 	jsonString := fmt.Sprintf("{ \"title\" : \"%s\" }", roomName)
 	var jsonStr = []byte(jsonString)
 	req, err := http.NewRequest("POST", sparkURL+"/rooms", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		log.Println("creating request failed:", err)
 	}
-	s.processRequest(req)
+	jsonOut := s.processRequest(req)
+	var room SparkRoom
+	err = json.Unmarshal(jsonOut, &room)
+	if err != nil {
+		log.Println("error: ", err)
+	}
+	return room
 }
 
 // This function lists all the rooms in the Spark api.
-func (s *sparkClient) Rooms() {
+func (s *sparkClient) Rooms() []SparkRoom {
 	req, err := http.NewRequest("GET", sparkURL+"/rooms", nil)
 	if err != nil {
 		log.Println("creating request failed:", err)
 	}
-	s.processRequest(req)
+
+	jsonOut := s.processRequest(req)
+	var rooms SparkRooms
+	err = json.Unmarshal(jsonOut, &rooms)
+	if err != nil {
+		log.Println("error: ", err)
+	}
+	//fmt.Printf("%+v", rooms)
+	return rooms.Items
 }
 
 // Creates a New SparkClient to be used.
