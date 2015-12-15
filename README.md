@@ -21,10 +21,14 @@ Then re-export your environment or open a new window.
 ### 3.  Run the code: 
 
 ```
-go run main.go | json_pp
+go run main.go <email file> fortunes.txt
 ```
+
+You'll need to supply a list of emails of people.  Just do one email per line.
 
 Look at the ```sparkClient/sparkClient.go``` file to see the available commands.
 
 Check out [Cisco DevNet](https://learninglabs.cisco.com/lab/collab-spark-message/step/4) for more tutorials
 
+### Fortunes from: 
+https://joshmadison.com/2008/04/20/fortune-cookie-fortunes/
