@@ -10,7 +10,7 @@ git clone https://github.com/vallard/gospark.git
 
 ### 2.  Define an environment variable
 
-Go to the (https://developer.ciscospark.com/)[Cisco Spark Developers homepage] and click on your profile 
+Go to the [Cisco Spark Developers homepage](https://developer.ciscospark.com)  and click on your profile 
 picture.  From there you can copy your Auth Token.  In your ```.profile``` or ```.bash_profile``` add the line:
 
 ```
@@ -26,5 +26,5 @@ go run main.go | json_pp
 
 Look at the ```sparkClient/sparkClient.go``` file to see the available commands.
 
-Check out [https://learninglabs.cisco.com/lab/collab-spark-message/step/4](Cisco DevNet) for more tutorials
+Check out [Cisco DevNet](https://learninglabs.cisco.com/lab/collab-spark-message/step/4) for more tutorials
 
