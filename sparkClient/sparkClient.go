@@ -46,6 +46,27 @@ func (s *sparkClient) processRequest(req *http.Request) {
 	fmt.Printf("%s", body)
 }
 
+func (s *sparkClient) PostMessage(roomId string, fileURL string, text string) {
+	jsonString := fmt.Sprintf("{ \"roomId\" : \"%s\" , \"file\" : \"%s\", \"text\" : \"%s\" }", roomId, fileURL, text)
+	var jsonStr = []byte(jsonString)
+	req, err := http.NewRequest("POST", sparkURL+"/messages", bytes.NewBuffer(jsonStr))
+	if err != nil {
+		log.Println("creating request failed:", err)
+	}
+	s.processRequest(req)
+
+}
+
+func (s *sparkClient) AddMemberToSparkRoom(email string, roomId string, isModerator bool) {
+	jsonString := fmt.Sprintf("{ \"roomId\" : \"%s\" , \"personEmail\" : \"%s\", \"isModerator\" : %e }", roomId, email, isModerator)
+	var jsonStr = []byte(jsonString)
+	req, err := http.NewRequest("POST", sparkURL+"/memberships", bytes.NewBuffer(jsonStr))
+	if err != nil {
+		log.Println("creating request failed:", err)
+	}
+	s.processRequest(req)
+}
+
 // This function will create a new Spark Room
 func (s *sparkClient) NewRoom(roomName string) {
 	jsonString := fmt.Sprintf("{ \"title\" : \"%s\" }", roomName)
