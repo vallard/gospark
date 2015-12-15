@@ -10,7 +10,7 @@ git clone https://github.com/vallard/gospark.git
 
 ### 2.  Define an environment variable
 
-Go to the [https://developer.ciscospark.com/](Cisco Spark Developers homepage) and click on your profile 
+Go to the (https://developer.ciscospark.com/)[Cisco Spark Developers homepage] and click on your profile 
 picture.  From there you can copy your Auth Token.  In your ```.profile``` or ```.bash_profile``` add the line:
 
 ```
