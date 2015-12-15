@@ -24,7 +24,7 @@ func main() {
 
 	// send that sucker the same message 100 times.
 	for i := 0; i < 199; i++ {
-		msg := fmt.Sprintf("Hi Sunshine!", i)
+		msg := fmt.Sprintf("Hi Sunshine! %d", i)
 		sparkClient.PostMessageToSparkRoom(msg, r.Id, "")
 	}
 }
