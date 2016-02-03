@@ -6,15 +6,29 @@ import (
 	"bufio"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
+	"net/http"
 	"os"
 	"path"
 	"strings"
 
+	"github.com/vallard/gospark/routes"
 	"github.com/vallard/gospark/sparkClient"
 )
 
 func main() {
+	// readFortunes()
+	sparkPostingService()
+}
+
+func sparkPostingService() {
+	router := routes.NewRouter()
+	log.Fatal(http.ListenAndServe(":8081", router))
+}
+
+// Example function to show a bunch of fortunes.
+func readFortunes() {
 	// Lists all the rooms that I'm a member of.
 	//rooms := sparkClient.Rooms()
 	//for _, r := range rooms {

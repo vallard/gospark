@@ -2,7 +2,16 @@
 
 Testing library for running commands in Cisco Spark using Go.
 
-## To use this: 
+
+## Spark integration service bot
+
+Testing
+
+```
+curl -X POST -H 'Content-Type: application/json' -d "{\"test\" : \"this\" }" localhost:8081/v1/commit/
+```
+
+## Spark Fortune
 
 ### 1.  Download code:
 
