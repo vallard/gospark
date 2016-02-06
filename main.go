@@ -24,7 +24,7 @@ func main() {
 
 func sparkPostingService() {
 	router := routes.NewRouter()
-	log.Fatal(http.ListenAndServe(":8081", router))
+	log.Fatal(http.ListenAndServe(":7779", router))
 }
 
 // Example function to show a bunch of fortunes.
