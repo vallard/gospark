@@ -5,6 +5,13 @@ Testing library for running commands in Cisco Spark using Go.
 
 ## Spark integration service bot
 
+Build it for testing: 
+```
+docker run --name gospark -v `pwd`:/go/src/github.com/vallard/gospark/ -w /go/src/github.com/vallard/gospark/ -p 8089:8089 --rm -it golang
+go get
+go run main.go
+```
+
 Testing
 
 ```

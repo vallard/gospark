@@ -8,8 +8,11 @@ import "time"
 */
 
 type CommitMessage struct {
-	Repo    Repository
-	Commits []Commit
+	user_name   string
+	message     string
+	object_kind string
+	Repo        Repository `json:repository`
+	Commits     []Commit
 }
 
 type Repository struct {

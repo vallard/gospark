@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -22,13 +23,12 @@ func GitCommit(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(c.Repo.Name)
 
-	/*	hah, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			fmt.Fprintf(w, "%s", err)
-		}
-		fmt.Fprintf(w, "This is our body: %s", hah)
-		log.Printf("%s", hah)
-	*/
+	hah, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Fprintf(w, "%s", err)
+	}
+	fmt.Fprintf(w, "This is our body: %s", hah)
+	log.Printf("%s", hah)
 
 }
 
