@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/vallard/gospark/models"
 )
 
 func GitCommit(w http.ResponseWriter, r *http.Request) {
@@ -12,12 +14,21 @@ func GitCommit(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
 
-	hah, err := ioutil.ReadAll(r.Body)
+	decoder := json.NewDecoder(r.Body)
+	var c models.CommitMessage
+	err := decoder.Decode(&c)
 	if err != nil {
 		fmt.Fprintf(w, "%s", err)
 	}
-	fmt.Fprintf(w, "This is our body: %s", hah)
-	log.Printf("%s", hah)
+	log.Println(c.Repo.Name)
+
+	/*	hah, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			fmt.Fprintf(w, "%s", err)
+		}
+		fmt.Fprintf(w, "This is our body: %s", hah)
+		log.Printf("%s", hah)
+	*/
 
 }
 
